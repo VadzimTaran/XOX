@@ -13,22 +13,20 @@ def init_board(board_size):
         print("Error: wrong entered board size")
         return []
 
-    # | 1 | 2 | 3 |         | 0,0 | 0,1 | 0,2 |
-    # -------------         -------------------
-    # | 4 | 5 | 6 |         | 1,0 | 1,1 | 1,2 |
-    # -------------         -------------------
-    # | 7 | 8 | 9 |         | 2,0 | 2,1 | 2,2 |
+    # | 1 | 2 | 3 |
+    # -------------
+    # | 4 | 5 | 6 |
+    # -------------
+    # | 7 | 8 | 9 |
     board = []
-    cells = dict()
+    # create a board and enumerate cells
     cell_num = 0
     for i in range(board_size):
         row = []
         for j in range(board_size):
             cell_num += 1
             row.append(str(cell_num))
-            cells[cell_num] = row[j]
         board.append(row)
-
     # print_board(board, length)
     # print(cells)
     return board
@@ -39,17 +37,21 @@ def print_board(board, player_dict):
     if len(board) == 0:
         print("Error: empty board")
         return
+
     if len(board) != len(board[0]):
         print("Error: wrong board size")
         return
 
+    # clear screen
     print("\n" * 10)
 
     length = len(str(board[len(board) - 1][len(board) - 1]))
 
+    # display players
     for player, char in player_dict.items():
         print(player, "{:<{}}".format(":", length * len(board) - 1), char)
 
+    # draw board
     # | 1 | 2 | 3 |
     # -------------
     # | 4 | 5 | 6 |
@@ -65,17 +67,19 @@ def print_board(board, player_dict):
 
 ##### Game ##############
 def enter_player_name(players):
-    if len(players) >= NUM_OF_PLAYERS:
+    if len(players) >= NUM_OF_PLAYERS:  # 2 players
         print("All players are registered")
         return players
 
-    KEY_WORD = "End"
+    KEY_WORD = "End"  # key word to break the loop
     while len(players) < NUM_OF_PLAYERS:
         player = input(f"Please enter name of player {len(players) + 1} or '{KEY_WORD}': ")
         if player == KEY_WORD:
             break
+        # check for duplicates
         if player in players:
             print("Player already exists. Please, try once more")
+        # check for empty name
         if player == "":
             print("Player's name is empty. Please, try once more")
         else:
@@ -88,21 +92,18 @@ def init_players():
     player_dict = dict()
     print("Enter names of players")
     # enter names
-
     player_list = []
     player_list = enter_player_name(player_list)
-
+    # check if all palyers registered
     if len(player_list) < NUM_OF_PLAYERS:
         print("Not all players are registered")
         return player_dict
-
     # select 0 or X
     # select 0
     o_or_x = randint(0, 1)
     # select who first
     who_first = randint(0, 1)
     rev_player_list = player_list[::-1]
-
     for i, player in enumerate(player_list if who_first else rev_player_list):
         fst_snd_str = ""
         if not i:  # 0
@@ -112,7 +113,6 @@ def init_players():
             fst_snd_str = "second"
             player_dict[player] = X_0[(len(X_0) - 1) - o_or_x]
         print(f"Player {player} plays {fst_snd_str} with {player_dict[player]}.")
-
     return player_dict
 
 
@@ -164,6 +164,7 @@ def check_filled_diagonal(board, is_direct=True):
     return True
 
 
+##### Check if any Player Has Won - One Line Is Filled #########
 def is_won(board):
     return check_filled_horizontal(board) or \
            check_filled_vertical(board) or \
@@ -171,6 +172,7 @@ def is_won(board):
            check_filled_diagonal(board, False)
 
 
+##### Check if no more Cell Available #########
 def is_all_filled(board):
     for row in board:
         if len(set(row)) > len(X_0):
@@ -178,6 +180,7 @@ def is_all_filled(board):
     return True
 
 
+##### Check if Int Value Entered #########
 def enter_int_value(str_):
     while True:
         try:
@@ -191,6 +194,8 @@ def enter_int_value(str_):
             break
     return int_value
 
+
+##### Check if Correct Board Size Entered #########
 def enter_board_size():
     while True:
         size = enter_int_value("Please enter board size: ")
@@ -200,6 +205,8 @@ def enter_board_size():
             break
     return size
 
+
+##### Make Move #########
 def make_move(board, player_str, player_dict):
     print(f"Player {player_str} makes a move.")
     while True:
@@ -218,6 +225,7 @@ def make_move(board, player_str, player_dict):
     return board
 
 
+##### Main #########
 def main():
     print("Hello")
     # select board
